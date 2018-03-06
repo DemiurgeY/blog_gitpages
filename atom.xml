@@ -5,9 +5,9 @@
   
   <link href="/atom.xml" rel="self"/>
   
-  <link href="http://yoursite.com/"/>
+  <link href="https://blingblingbilng.github.io/shadow/"/>
   <updated>2018-03-06T11:24:33.845Z</updated>
-  <id>http://yoursite.com/</id>
+  <id>https://blingblingbilng.github.io/shadow/</id>
   
   <author>
     <name>John Doe</name>
@@ -18,8 +18,8 @@
   
   <entry>
     <title>Hello World</title>
-    <link href="http://yoursite.com/2018/03/06/hello-world/"/>
-    <id>http://yoursite.com/2018/03/06/hello-world/</id>
+    <link href="https://blingblingbilng.github.io/shadow/2018/03/06/hello-world/"/>
+    <id>https://blingblingbilng.github.io/shadow/2018/03/06/hello-world/</id>
     <published>2018-03-06T11:24:33.845Z</published>
     <updated>2018-03-06T11:24:33.845Z</updated>
     
