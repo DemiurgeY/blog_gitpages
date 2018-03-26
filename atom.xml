@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>Demiurge&#39;s blog</title>
+  <title>Demiurge</title>
   
   
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://blingblingbilng.github.io/shadow/"/>
-  <updated>2018-03-06T15:28:06.479Z</updated>
+  <updated>2018-03-26T15:27:38.500Z</updated>
   <id>https://blingblingbilng.github.io/shadow/</id>
   
   <author>
@@ -21,17 +21,18 @@
     <link href="https://blingblingbilng.github.io/shadow/2018/03/06/%E5%86%99%E4%BD%9C%E6%96%B9%E5%BC%8F/"/>
     <id>https://blingblingbilng.github.io/shadow/2018/03/06/写作方式/</id>
     <published>2018-03-06T15:18:34.154Z</published>
-    <updated>2018-03-06T15:28:06.479Z</updated>
+    <updated>2018-03-26T15:27:38.500Z</updated>
     
-    <content type="html"><![CDATA[<h1 id="测试文章"><a href="#测试文章" class="headerlink" title="测试文章"></a>测试文章</h1><hr><p>内容1内容1内容1内容1<br>内容1内容1内容1</p><p>内容1内容1内容1<br>内容1v内容1内容1<br>内容1</p>]]></content>
+    <content type="html"><![CDATA[<a id="more"></a><h1 id="测试文章"><a href="#测试文章" class="headerlink" title="测试文章"></a>测试文章</h1><hr><p>内容1内容1内容1内容1<br>内容1内容1内容1</p><p>内容1内容1内容1<br>内容1v内容1内容1<br>内容1</p>]]></content>
     
     <summary type="html">
     
       
       
-        &lt;h1 id=&quot;测试文章&quot;&gt;&lt;a href=&quot;#测试文章&quot; class=&quot;headerlink&quot; title=&quot;测试文章&quot;&gt;&lt;/a&gt;测试文章&lt;/h1&gt;&lt;hr&gt;
+        &lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
+&lt;h1 id=&quot;测试文章&quot;&gt;&lt;a href=&quot;#测试文章&quot; class=&quot;headerlink&quot; title=&quot;测试文章&quot;&gt;&lt;/a&gt;测试文章&lt;/h1&gt;&lt;hr&gt;
 &lt;p&gt;内容1内容1内容1内容1&lt;br&gt;内容1内容1内容1&lt;/p&gt;
-&lt;p&gt;内容1内容1内容1&lt;br&gt;内容1v内容1内容1&lt;
+&lt;p&gt;内容1内容1
       
     
     </summary>
