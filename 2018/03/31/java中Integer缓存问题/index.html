@@ -31,14 +31,15 @@
   </nav>
 </header>
 			<main class="main">
-				<section class="posts">
-	
-		<article class="post">
-			<div class="post-title">
-				<a class="post-title-link" href="/2018/03/31/java中Integer缓存问题/"></a>
-			</div>
-			<div class="post-content">
-				<p>先来看一道题</p>
+				<article class="post">
+  <div class="post-title">
+    <h2 class="title"></h2>
+  </div>
+   <div class="post-meta">
+    <span class="post-time">2018-03-31</span>
+  </div>
+  <div class="post-content">
+    <p>先来看一道题</p>
 <pre>
     // 程序填空,交换a和b的值,
     public static void main(String[] args) {
@@ -108,66 +109,8 @@
 <p><pre><br>    // Returns an {@code Integer} instance representing the specified<br>    // {@code int} value.  If a new {@code Integer} instance is not<br>    // required, this method should generally be used in preference to<br>    // the constructor {@link #Integer(int)}, as this method is likely<br>    // to yield significantly better space and time performance by<br>    // caching frequently requested values.<br>    // This method will always cache values in the range -128 to 127,<br>    // inclusive, and may cache other values outside of this range.<br>     public static Integer valueOf(int i) {<br>        if (i &gt;= IntegerCache.low &amp;&amp; i &lt;= IntegerCache.high)<br>            return IntegerCache.cache[i + (-IntegerCache.low)];<br>        return new Integer(i);<br>    }<br></pre><br>如果新的实例不是必须的话,那么创建int或Integer值在[-128,127]范围内时,会直接调用IntegerCache里面的对应的缓存值.那么问题来了,为什么要这样做呢.注释中已经有了解答.因为这个范围内的值访问的会比较频繁.设置缓存会</p>
 <p><pre><br>      // Cache to support the object identity semantics of autoboxing for values between<br>      // -128 and 127 (inclusive) as required by JLS.<br>      // The cache is initialized on first usage.  The size of the cache<br>      // may be controlled by the {@code -XX:AutoBoxCacheMax=<size>} option.<br>      // During VM initialization, java.lang.Integer.IntegerCache.high property<br>      // may be set and saved in the private system properties in the<br>      // sun.misc.VM class.<br>      private static class IntegerCache {<br>        static final int low = -128;<br>        static final int high;<br>        static final Integer cache[];<br>        static {<br>            // high value may be configured by property<br>            int h = 127;<br>            String integerCacheHighPropValue =<br>                sun.misc.VM.getSavedProperty(“java.lang.Integer.IntegerCache.high”);<br>            if (integerCacheHighPropValue != null) {<br>                try {<br>                    int i = parseInt(integerCacheHighPropValue);<br>                    i = Math.max(i, 127);<br>                    // Maximum array size is Integer.MAX_VALUE<br>                    h = Math.min(i, Integer.MAX_VALUE - (-low) -1);<br>                } catch( NumberFormatException nfe) {<br>                    // If the property cannot be parsed into an int, ignore it.<br>                }<br>            }<br>            high = h;<br>            cache = new Integer[(high - low) + 1];<br>            int j = low;<br>            for(int k = 0; k &lt; cache.length; k++)<br>                cache[k] = new Integer(j++);<br>            // range [-128, 127] must be interned (JLS7 5.1.7)<br>            assert IntegerCache.high &gt;= 127;<br>        }<br>        private IntegerCache() {}<br>    }<br></size></pre><br>通过注释可以看到: 对[-128,127]这个范围内值进行缓存.在第一使用缓存时,这个缓存会被初始化,缓存的大小可以通过option中的{@code -XX:AutoBoxCacheMax=<size>}来设置.</size></p>
 
-			</div>
-			<div class="post-meta">
-				<span class="post-time">2018-03-31</span>
-			</div>
-		</article>
-	
-		<article class="post">
-			<div class="post-title">
-				<a class="post-title-link" href="/2018/03/31/JavaScript闭包/"></a>
-			</div>
-			<div class="post-content">
-				<p>#JavaScript的闭包(Closure)</p>
-<hr>
-<blockquote>
-<p>本文权当是笔记,后期飞升之后,再回来补自己的理解与体会.并将自己在实际中用到的经验分享出来.</p>
-</blockquote>
-<p>##闭包:<br>　有权访问另一个函数作用域中的变量的函数.创建闭包的常见方式就是在一个函数内部创建另一个函数</p>
-<pre>
-    function createComparisonFunction(propertyName){
-        return function(object1, object2){
-            var value1=object1[propertyName];
-            var value2=object2[propertyName];
-            if (value1 < value2){
-                return -1;        
-            }else if(value1 > value2){
-                return 1;
-            }else{
-                reutn 0;    
-            }    
-        };
-    }
-</pre>
-
-<p>##作用域链：<br>　当某个函数第一次被调用时，会创建一个执行环境（ｅｘｅｃｕｔｉｏｎ　ｃｏｎｔｅｘｔ）及相应的作用域链，并把作用域链赋值给一个特殊的内部属性（［［Ｓｃｏｐｅ］］）．然后使用ｔｈｉｓ．ａｒｇｕｍｅｎｔｓ和其他命名参数的值来初始化函数的活动对象（ａｃｔｉｖａｔｉｏｎ　ｏｂｊｅｃｔ）．但在作用域链中，外部函数的活动对象始终处于第二位，外部函数的外部函数的活动对象处于第三位．．．．直至作为作用域链终点的全局执行环境</p>
-<pre>
-    function compare(value1,value2){
-        if(value1 < value2){
-            return -1;
-        }else if(value1 > value2){
-            return 1;
-        }else{
-            return 0;
-        }
-    }
-
-    var result = compare(5,10);
-</pre>
-
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;当第一次调用compare()时,会创建一个包含this.arguments,value1和value2的活动对象.全局执行环境的变量对象(包含this.result.compare)在compare()执行环境的作用域链处于第二位<br>如下图:<br>    <img src="https://i.imgur.com/jkpmWLK.png" alt=""></p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;后台的每个执行环境都有一个表示变量的对象–变量对象(variable object).全局环境的变量对象始终存在,而像compare()函数这样的局部环境的变量对象,则只在函数执行的过程中存在.在创建compare()函数时,会创建一个预先包含全局变量对象的作用域链,这个作用域链被保存在内部的[[Scope]]属性中.</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;当调用compare()函数时,会为函数创建一个执行环境,然后通过复制函数的[[Scope]]属性中的对象构建起执行环境的作用域链.此后,又有一个活动对象</p>
-
-			</div>
-			<div class="post-meta">
-				<span class="post-time">2018-03-31</span>
-			</div>
-		</article>
-	
-</section>
-
+  </div>
+</article>
 			</main>
 		</div
 	</body>
