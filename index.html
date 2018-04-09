@@ -35,6 +35,44 @@
 	
 		<article class="post">
 			<div class="post-title">
+				<a class="post-title-link" href="/2018/04/02/Integer的缓存机制/"></a>
+			</div>
+			<div class="post-content">
+				<p>Integer的缓存机制.<br>我们经常会看到一道面试题是这样的.</p>
+<pre>
+    Integer a = 10;
+    int b = 10;
+    Integer c = Integer.valueOf(10);
+    Integer d = new Integer(10);
+
+    以下输出结果为false的是：
+
+    A.   System.out.println(a == b); // true
+    B.   System.out.println(a == c); // true
+    C.   System.out.println(c == d); // false
+    D.   System.out.println(b == d); // true
+</pre>
+我们先看一下
+<pre>
+    int a = 5;
+    Integer b = 5;
+    //这两句话都做了什么,我们反编译一下class文件.发现了.
+    int a = 5;
+    Integer b = Integer.valueOf(5);
+</pre>
+
+<p>所以我们可以看出Integer.valueOf()</p>
+<p><pre><br>    // Returns an {@code Integer} instance representing the specified<br>    // {@code int} value.  If a new {@code Integer} instance is not<br>    // required, this method should generally be used in preference to<br>    // the constructor {@link #Integer(int)}, as this method is likely<br>    // to yield significantly better space and time performance by<br>    // caching frequently requested values.<br>    // This method will always cache values in the range -128 to 127,<br>    // inclusive, and may cache other values outside of this range.<br>     public static Integer valueOf(int i) {<br>        if (i &gt;= IntegerCache.low &amp;&amp; i &lt;= IntegerCache.high)<br>            return IntegerCache.cache[i + (-IntegerCache.low)];<br>        return new Integer(i);<br>    }<br></pre><br>如果新的实例不是必须的话,那么创建int或Integer值在[-128,127]范围内时,会直接调用IntegerCache里面的对应的缓存值.注释中已经有了解答:这个范围内的值访问的会比较频繁.</p>
+<p><pre><br>      // Cache to support the object identity semantics of autoboxing for values between<br>      // -128 and 127 (inclusive) as required by JLS.<br>      // The cache is initialized on first usage.  The size of the cache<br>      // may be controlled by the {@code -XX:AutoBoxCacheMax=<size>} option.<br>      // During VM initialization, java.lang.Integer.IntegerCache.high property<br>      // may be set and saved in the private system properties in the<br>      // sun.misc.VM class.<br>      private static class IntegerCache {<br>        static final int low = -128;<br>        static final int high;<br>        static final Integer cache[];<br>        static {<br>            // high value may be configured by property<br>            int h = 127;<br>            String integerCacheHighPropValue =<br>                sun.misc.VM.getSavedProperty(“java.lang.Integer.IntegerCache.high”);<br>            if (integerCacheHighPropValue != null) {<br>                try {<br>                    int i = parseInt(integerCacheHighPropValue);<br>                    i = Math.max(i, 127);<br>                    // Maximum array size is Integer.MAX_VALUE<br>                    h = Math.min(i, Integer.MAX_VALUE - (-low) -1);<br>                } catch( NumberFormatException nfe) {<br>                    // If the property cannot be parsed into an int, ignore it.<br>                }<br>            }<br>            high = h;<br>            cache = new Integer[(high - low) + 1];<br>            int j = low;<br>            for(int k = 0; k &lt; cache.length; k++)<br>                cache[k] = new Integer(j++);<br>            // range [-128, 127] must be interned (JLS7 5.1.7)<br>            assert IntegerCache.high &gt;= 127;<br>        }<br>        private IntegerCache() {}<br>    }<br></size></pre><br>通过注释可以看到: 对[-128,127]这个范围内值进行缓存.在第一使用缓存时,这个缓存会被初始化,缓存的大小可以通过option中的{@code -XX:AutoBoxCacheMax=<size>}来设置.</size></p>
+
+			</div>
+			<div class="post-meta">
+				<span class="post-time">2018-04-02</span>
+			</div>
+		</article>
+	
+		<article class="post">
+			<div class="post-title">
 				<a class="post-title-link" href="/2018/03/31/java中Integer缓存问题/"></a>
 			</div>
 			<div class="post-content">
@@ -80,34 +118,6 @@
 <pre>
 
 </pre>
-
-<p>Integer的缓存机制.<br>我们经常会看到一道面试题是这样的.</p>
-<pre>
-    Integer a = 10;
-    int b = 10;
-    Integer c = Integer.valueOf(10);
-    Integer d = new Integer(10);
-
-    以下输出结果为false的是：
-
-    A.   System.out.println(a == b); // true
-    B.   System.out.println(a == c); // true
-    C.   System.out.println(c == d); // false
-    D.   System.out.println(b == d); // false
-</pre>
-我们先看一下
-<pre>
-    int a = 5;
-    Integer b = 5;
-    //这两句话都做了什么,我们反编译一下class文件.
-    int a = 5;
-    Integer b = Integer.valueOf(5);
-</pre>
-
-
-<p><pre><br>    // Returns an {@code Integer} instance representing the specified<br>    // {@code int} value.  If a new {@code Integer} instance is not<br>    // required, this method should generally be used in preference to<br>    // the constructor {@link #Integer(int)}, as this method is likely<br>    // to yield significantly better space and time performance by<br>    // caching frequently requested values.<br>    // This method will always cache values in the range -128 to 127,<br>    // inclusive, and may cache other values outside of this range.<br>     public static Integer valueOf(int i) {<br>        if (i &gt;= IntegerCache.low &amp;&amp; i &lt;= IntegerCache.high)<br>            return IntegerCache.cache[i + (-IntegerCache.low)];<br>        return new Integer(i);<br>    }<br></pre><br>如果新的实例不是必须的话,那么创建int或Integer值在[-128,127]范围内时,会直接调用IntegerCache里面的对应的缓存值.那么问题来了,为什么要这样做呢.注释中已经有了解答.因为这个范围内的值访问的会比较频繁.设置缓存会</p>
-<p><pre><br>      // Cache to support the object identity semantics of autoboxing for values between<br>      // -128 and 127 (inclusive) as required by JLS.<br>      // The cache is initialized on first usage.  The size of the cache<br>      // may be controlled by the {@code -XX:AutoBoxCacheMax=<size>} option.<br>      // During VM initialization, java.lang.Integer.IntegerCache.high property<br>      // may be set and saved in the private system properties in the<br>      // sun.misc.VM class.<br>      private static class IntegerCache {<br>        static final int low = -128;<br>        static final int high;<br>        static final Integer cache[];<br>        static {<br>            // high value may be configured by property<br>            int h = 127;<br>            String integerCacheHighPropValue =<br>                sun.misc.VM.getSavedProperty(“java.lang.Integer.IntegerCache.high”);<br>            if (integerCacheHighPropValue != null) {<br>                try {<br>                    int i = parseInt(integerCacheHighPropValue);<br>                    i = Math.max(i, 127);<br>                    // Maximum array size is Integer.MAX_VALUE<br>                    h = Math.min(i, Integer.MAX_VALUE - (-low) -1);<br>                } catch( NumberFormatException nfe) {<br>                    // If the property cannot be parsed into an int, ignore it.<br>                }<br>            }<br>            high = h;<br>            cache = new Integer[(high - low) + 1];<br>            int j = low;<br>            for(int k = 0; k &lt; cache.length; k++)<br>                cache[k] = new Integer(j++);<br>            // range [-128, 127] must be interned (JLS7 5.1.7)<br>            assert IntegerCache.high &gt;= 127;<br>        }<br>        private IntegerCache() {}<br>    }<br></size></pre><br>通过注释可以看到: 对[-128,127]这个范围内值进行缓存.在第一使用缓存时,这个缓存会被初始化,缓存的大小可以通过option中的{@code -XX:AutoBoxCacheMax=<size>}来设置.</size></p>
-
 			</div>
 			<div class="post-meta">
 				<span class="post-time">2018-03-31</span>
